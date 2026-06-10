@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Medicamentos</h2>
+    <a href="{{ url_for('medicamentos.nuevo') }}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Nuevo Medicamento
+    </a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Stock Mínimo</th>
+                        <th>Categoría</th>
+                        <th>Proveedor</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for med in medicamentos %}
+                    <tr>
+                        <td>{{ med.id }}</td>
+                        <td>{{ med.nombre }}</td>
+                        <td>${{ "%.2f"|format(med.precio) }}</td>
+                        <td class="{% if med.stock <= med.stock_minimo %}text-danger{% endif %}">
+                            {{ med.stock }}
+                        </td>
+                        <td>{{ med.stock_minimo }}</td>
+                        <td>{{ med.categoria.nombre if med.categoria else 'Sin categoría' }}</td>
+                        <td>{{ med.proveedor.nombre if med.proveedor else 'Sin proveedor' }}</td>
+                        <td>
+                            <a href="{{ url_for('medicamentos.editar', id=med.id) }}" class="btn btn-sm btn-warning">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a href="{{ url_for('medicamentos.eliminar', id=med.id) }}" class="btn btn-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este medicamento?')">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

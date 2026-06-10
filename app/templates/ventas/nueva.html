@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2 class="mb-4">Nueva Venta</h2>
+
+<div class="card">
+    <div class="card-body">
+        <form method="POST" id="ventaForm">
+            {{ form.hidden_tag() }}
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    {{ form.cliente_id.label(class="form-label") }}
+                    {{ form.cliente_id(class="form-select") }}
+                </div>
+                <div class="col-md-3 mb-3">
+                    {{ form.medicamento_id.label(class="form-label") }}
+                    {{ form.medicamento_id(class="form-select", id="medicamentoSelect") }}
+                </div>
+                <div class="col-md-2 mb-3">
+                    {{ form.cantidad.label(class="form-label") }}
+                    {{ form.cantidad(class="form-control", id="cantidad") }}
+                </div>
+                <div class="col-md-1 mb-3">
+                    <label class="form-label">&nbsp;</label>
+                    <button type="submit" class="btn btn-success d-block">
+                        <i class="fas fa-check"></i> Vender
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h5>Información del Medicamento</h5>
+    </div>
+    <div class="card-body" id="infoMedicamento">
+        <p class="text-muted">Seleccione un medicamento para ver su información</p>
+    </div>
+</div>
+
+<script>
+document.getElementById('medicamentoSelect').addEventListener('change', function() {
+    var medicamentoId = this.value;
+    if (medicamentoId) {
+        // Aquí se podría hacer una búsqueda AJAX para obtener detalles del medicamento
+        var select = this;
+        var selectedOption = select.options[select.selectedIndex];
+        var infoDiv = document.getElementById('infoMedicamento');
+        infoDiv.innerHTML = '<p>Cargando información...</p>';
+        
+        // Simulación - en un caso real se haría fetch al endpoint
+        setTimeout(() => {
+            infoDiv.innerHTML = `
+                <p><strong>Medicamento seleccionado:</strong> ${selectedOption.text.split(' - ')[0]}</p>
+                <p><strong>Precio:</strong> ${selectedOption.text.match(/\$\d+\.?\d*/)?.[0] || 'N/A'}</p>
+            `;
+        }, 500);
+    }
+});
+</script>
+{% endblock %}

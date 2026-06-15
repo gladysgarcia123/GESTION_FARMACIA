@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 from config import Config
 
-# Crear db AQUÍ (solo una vez)
+
 db = SQLAlchemy()
 login_manager = LoginManager()
 
@@ -23,6 +23,7 @@ def create_app():
     from app.ventas.routes import ventas_bp
     from app.proveedores.routes import proveedores_bp
     from app.clientes.routes import clientes_bp
+   
 
     # Registrar blueprints
     app.register_blueprint(auth_bp, url_prefix='/auth')
@@ -31,6 +32,7 @@ def create_app():
     app.register_blueprint(ventas_bp, url_prefix='/ventas')
     app.register_blueprint(proveedores_bp, url_prefix='/proveedores')
     app.register_blueprint(clientes_bp, url_prefix='/clientes')
+
 
     return app
 

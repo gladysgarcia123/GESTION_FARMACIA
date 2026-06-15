@@ -52,3 +52,7 @@ class VentaForm(FlaskForm):
     medicamento_id = SelectField('Medicamento', coerce=int, validators=[DataRequired()])
     cantidad = IntegerField('Cantidad', validators=[DataRequired(), NumberRange(min=1)])
     submit = SubmitField('Registrar Venta')
+
+class CategoriaForm(FlaskForm):
+    nombre = StringField('Nombre de la Categoría', validators=[DataRequired(), Length(max=100)])
+    submit = SubmitField('Guardar')    

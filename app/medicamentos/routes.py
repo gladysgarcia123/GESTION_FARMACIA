@@ -3,6 +3,7 @@ from flask_login import login_required
 from app import db
 from app.models import Medicamento, Proveedor, Categoria
 from app.forms import MedicamentoForm
+from app.forms import CategoriaForm
 from . import medicamentos_bp
 
 @medicamentos_bp.route('/')
@@ -64,3 +65,49 @@ def eliminar(id):
     db.session.commit()
     flash('Medicamento eliminado exitosamente', 'success')
     return redirect(url_for('medicamentos.listar'))
+
+# Agrega estas funciones al final de tu medicamentos/routes.py
+@medicamentos_bp.route('/categorias')
+@login_required
+def listar_categorias():
+    categorias = Categoria.query.all()
+    return render_template('medicamentos/categoria.html', categorias=categorias)
+
+@medicamentos_bp.route('/categoria/nueva', methods=['GET', 'POST'])
+@login_required
+def nueva_categoria():
+    from app.forms import CategoriaForm
+    form = CategoriaForm()
+    if form.validate_on_submit():
+        categoria = Categoria(nombre=form.nombre.data)
+        db.session.add(categoria)
+        db.session.commit()
+        flash('Categoría creada exitosamente', 'success')
+        return redirect(url_for('medicamentos.listar_categorias'))
+    return render_template('medicamentos/categoria_form.html', 
+                         titulo='Nueva Categoría', 
+                         form=form)
+
+@medicamentos_bp.route('/categoria/editar/<int:id>', methods=['GET', 'POST'])
+@login_required
+def editar_categoria(id):
+    from app.forms import CategoriaForm
+    categoria = Categoria.query.get_or_404(id)
+    form = CategoriaForm(obj=categoria)
+    if form.validate_on_submit():
+        categoria.nombre = form.nombre.data
+        db.session.commit()
+        flash('Categoría actualizada exitosamente', 'success')
+        return redirect(url_for('medicamentos.listar_categorias'))
+    return render_template('medicamentos/categoria_form.html', 
+                         titulo='Editar Categoría', 
+                         form=form)
+
+@medicamentos_bp.route('/categoria/eliminar/<int:id>')
+@login_required
+def eliminar_categoria(id):
+    categoria = Categoria.query.get_or_404(id)
+    db.session.delete(categoria)
+    db.session.commit()
+    flash('Categoría eliminada exitosamente', 'success')
+    return redirect(url_for('medicamentos.listar_categorias'))
